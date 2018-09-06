@@ -32,14 +32,14 @@ class RecommendState extends State<Recommend> {
           // banner
           final List _banners = data['itemList'];
           return Container(
-            height: 290.0,
+            height: 320.0,
             child: Carousel(
                 children: _banners.map((item) {
               var _header = item['data']['header'];
               return Column(
                 children: [
                   Image.network(
-                      item['data']['content']['data']['cover']['feed']),
+                      item['data']['content']['data']['cover']['feed'], height: 240.0,),
                   ListTile(
                     leading: CircleAvatar(
                       child: Image.network(_header['icon']),

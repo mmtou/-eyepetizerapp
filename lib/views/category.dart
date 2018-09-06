@@ -34,9 +34,8 @@ class CategoryState extends State<Category> {
             }),
         title: Text('置顶分类排序'),
       ),
-      body: ListView(
-        children: categories.asMap().keys.map((index) {
-          var item = categories[index];
+      body: ReorderableListView(
+        children: categories.map((item) {
           return Column(
             children: <Widget>[
               ListTile(
@@ -45,35 +44,7 @@ class CategoryState extends State<Category> {
                 ),
                 title: Text(item['name']),
                 subtitle: Text(item['description']),
-                trailing: GestureDetector(
-                  child: Icon(Icons.menu),
-                  onVerticalDragStart: (detail) {
-                    _startY = detail.globalPosition.dy;
-                  },
-                  onVerticalDragUpdate: (detail) {
-                    _endY = detail.globalPosition.dy;
-                  },
-                  onVerticalDragEnd: (detail) {
-                    print('_index: ${index}');
-                    var _distance = _endY - _startY;
-                    print('_distance: ${_distance}');
-                    int offset = (_distance / 72.0).toInt();
-                    print('offset: ${offset}');
-                    var currentIndex = index + offset;
-                    print('currentIndex: ${currentIndex}');
-                    if (currentIndex < 0) {
-                      currentIndex = 0;
-                    } else if (currentIndex >= categories.length) {
-                      currentIndex = categories.length - 1;
-                    }
-                    print('currentIndex: ${currentIndex}');
-                    categories.remove(item);
-                    categories.insert(currentIndex, item);
-                    setState(() {
-                      this.categories = categories;
-                    });
-                  },
-                ),
+                trailing: Icon(Icons.menu),
                 onTap: () {
 //                  Navigator.pop(context);
                 },
@@ -82,8 +53,22 @@ class CategoryState extends State<Category> {
                 height: 0.0,
               ),
             ],
+            key: Key(item['name']),
           );
         }).toList(),
+        onReorder: (oldIndex, newIndex) {
+          var item = categories[oldIndex];
+          if (oldIndex < newIndex) {
+            newIndex = newIndex - 1;
+          }
+          categories.removeAt(oldIndex);
+          categories.insert(newIndex, item);
+          setState(() {
+            this.categories;
+          });
+          print('${oldIndex}, ${newIndex}');
+        },
+
       ),
     );
   }
