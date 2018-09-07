@@ -10,9 +10,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Index(),
       routes: {
-        '/index': MaterialPageRoute(builder: (context) => new Index()).builder,
+        '/index': MaterialPageRoute(builder: (context) => Index()).builder,
         '/category':
-            MaterialPageRoute(builder: (context) => new Category()).builder,
+            MaterialPageRoute(builder: (context) => Category()).builder,
       },
     );
   }

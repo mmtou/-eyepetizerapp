@@ -1,18 +1,27 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:eyepetizerapp/views/discovery.dart';
-import 'package:eyepetizerapp/views/recommend.dart';
+import 'discovery.dart';
+import 'recommend.dart';
+import 'categoryView.dart';
 import 'package:dio/dio.dart';
 
 class Index extends StatefulWidget {
+  final int tabIndex;
+
+  Index({this.tabIndex: 1});
+
   @override
   State<StatefulWidget> createState() {
-    return new IndexState();
+    return new IndexState(tabIndex);
   }
 }
 
 class IndexState extends State<Index> {
+  int tabIndex;
+
+  IndexState(this.tabIndex);
+
   int _index = 0;
   List tabs = [
     {'name': '发现'},
@@ -29,7 +38,7 @@ class IndexState extends State<Index> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      initialIndex: 1,
+      initialIndex: tabIndex,
       length: tabs.length,
       child: Scaffold(
         appBar: AppBar(
@@ -41,6 +50,7 @@ class IndexState extends State<Index> {
           title: TabBar(
             isScrollable: true,
             tabs: tabs.map((tab) => Text(tab['name'])).toList(),
+            indicatorSize: TabBarIndicatorSize.label,
           ),
           actions: <Widget>[
             IconButton(icon: Icon(Icons.search), onPressed: () {}),
@@ -99,10 +109,12 @@ class IndexState extends State<Index> {
       tabs.add({
         'name': item['name'],
       });
+      tabViews.add(CategoryView(item['id']));
     }).toList();
 
     setState(() {
       this.tabs = tabs;
+      this.tabViews = tabViews;
     });
   }
 }

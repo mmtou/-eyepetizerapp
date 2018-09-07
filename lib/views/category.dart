@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'dart:math';
+import 'index.dart';
 
 class Category extends StatefulWidget {
   @override
@@ -22,9 +22,6 @@ class CategoryState extends State<Category> {
 
   @override
   Widget build(BuildContext context) {
-    var _startY = 0.0;
-    var _endY = 0.0;
-
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -46,7 +43,12 @@ class CategoryState extends State<Category> {
                 subtitle: Text(item['description']),
                 trailing: Icon(Icons.menu),
                 onTap: () {
-//                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Index(
+                                tabIndex: item['id'],
+                              )));
                 },
               ),
               Divider(
@@ -68,7 +70,6 @@ class CategoryState extends State<Category> {
           });
           print('${oldIndex}, ${newIndex}');
         },
-
       ),
     );
   }
@@ -85,6 +86,7 @@ class CategoryState extends State<Category> {
     int _index = 0;
     response.data.map((item) {
       categories.add({
+        'id': item['id'],
         'name': item['name'],
         'description': item['description'],
         'bgPicture': item['bgPicture'],
