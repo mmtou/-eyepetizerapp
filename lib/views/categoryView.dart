@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
 import '../components/content.dart';
+import '../components/httpClient.dart';
 
 class CategoryView extends StatefulWidget {
   final int id;
@@ -15,7 +15,7 @@ class CategoryView extends StatefulWidget {
   }
 }
 
-class CategoryViewState extends State<CategoryView> {
+class CategoryViewState extends State<CategoryView> with SingleTickerProviderStateMixin {
   final int id;
   var list = [];
 
@@ -36,15 +36,7 @@ class CategoryViewState extends State<CategoryView> {
   }
 
   Future getList() async {
-    Dio dio = new Dio();
-    Response<Map> response = await dio.get(
-        "http://baobab.kaiyanapp.com/api/v5/index/tab/category/${id}",
-        options: Options(headers: {
-          'User-Agent':
-              'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
-        }));
-    print(response.data);
-    var data = response.data;
+    Map data = await HttpClient.get('/api/v5/index/tab/category/${id}');
 
     setState(() {
       this.list = data['itemList'];

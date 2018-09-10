@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
 import 'index.dart';
+import '../components/httpClient.dart';
 
 class Category extends StatefulWidget {
   @override
@@ -11,7 +11,8 @@ class Category extends StatefulWidget {
   }
 }
 
-class CategoryState extends State<Category> {
+class CategoryState extends State<Category>
+    with SingleTickerProviderStateMixin {
   List<Map> categories = [];
 
   @override
@@ -47,7 +48,7 @@ class CategoryState extends State<Category> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => Index(
-                                tabIndex: item['id'],
+                                tabId: item['id'],
                               )));
                 },
               ),
@@ -75,16 +76,8 @@ class CategoryState extends State<Category> {
   }
 
   Future getCategories() async {
-    Dio dio = new Dio();
-    Response<List<dynamic>> response =
-        await dio.get("http://baobab.kaiyanapp.com/api/v4/categories",
-            options: Options(headers: {
-              'User-Agent':
-                  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
-            }));
-    print(response.data);
-    int _index = 0;
-    response.data.map((item) {
+    List data = await HttpClient.get('/api/v4/categories');
+    data.map((item) {
       categories.add({
         'id': item['id'],
         'name': item['name'],

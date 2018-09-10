@@ -15,7 +15,6 @@ class Content extends StatelessWidget {
         final item = list[index];
         final type = item['type'];
         final data = item['data'];
-        print('item: ${item}');
 
         if ('squareCardCollection' == type) {
           // banner
@@ -23,36 +22,9 @@ class Content extends StatelessWidget {
           return Container(
             height: 281.4,
             child: Carousel(
-                children: _banners.map((item) {
-              var _header = item['data']['header'];
+                children: _banners.map((banner) {
               return Column(
-                children: [
-                  Image.network(
-                    item['data']['content']['data']['cover']['feed'],
-                    height: 217.4,
-                    width: 350.0,
-                  ),
-                  // height = 64.0
-                  ListTile(
-                    dense: true,
-                    leading: CircleAvatar(
-                      child: Image.network(_header['icon']),
-                    ),
-                    title: Text(
-                      _header['title'],
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    subtitle: Text(
-                      _header['description'],
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    trailing:
-                        IconButton(icon: Icon(Icons.share), onPressed: () {}),
-                  ),
-                  Divider(
-                    height: 0.0,
-                  ),
-                ],
+                children: getWidgetWithType(banner),
               );
             }).toList()),
           );
@@ -123,6 +95,7 @@ class Content extends StatelessWidget {
           return Column(
             children: [
               Text(data['playUrl']),
+
               // height = 64.0
               ListTile(
                 dense: true,
@@ -170,31 +143,24 @@ class Content extends StatelessWidget {
           return Container(
             height: 281.4,
             child: Carousel(
-                children: _banners.map((item) {
-              var _header = item['data']['header'];
+                children: _banners.map((banner) {
+              return Column(
+                children: getWidgetWithType(banner),
+              );
+            }).toList()),
+          );
+        } else if ('horizontalScrollCard' == type) {
+          final List _banners = data['itemList'];
+          return Container(
+            height: 281.4,
+            child: Carousel(
+                children: _banners.map((banner) {
               return Column(
                 children: [
                   Image.network(
-                    item['data']['content']['data']['cover']['feed'],
+                    banner['data']['image'],
                     height: 217.4,
                     width: 350.0,
-                  ),
-                  // height = 64.0
-                  ListTile(
-                    dense: true,
-                    leading: CircleAvatar(
-                      child: Image.network(_header['icon']),
-                    ),
-                    title: Text(
-                      _header['title'],
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    subtitle: Text(
-                      _header['description'],
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    trailing:
-                        IconButton(icon: Icon(Icons.share), onPressed: () {}),
                   ),
                   Divider(
                     height: 0.0,
@@ -206,5 +172,45 @@ class Content extends StatelessWidget {
         }
       },
     );
+  }
+
+  List<Widget> getWidgetWithType(item) {
+    var _header = item['data']['header'];
+    List<Widget> widgets = [];
+    if ('banner2' == item['type']) {
+      widgets.add(Image.network(
+        item['data']['image'],
+        height: 217.4,
+        width: 350.0,
+      ));
+    } else if ('followCard' == item['type']) {
+      widgets.add(Image.network(
+        item['data']['content']['data']['cover']['feed'],
+        height: 217.4,
+        width: 350.0,
+      ));
+
+      // height = 64.0
+      widgets.add(ListTile(
+        dense: true,
+        leading: CircleAvatar(
+          child: Image.network(_header['icon']),
+        ),
+        title: Text(
+          _header['title'],
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Text(
+          _header['description'],
+          overflow: TextOverflow.ellipsis,
+        ),
+        trailing: IconButton(icon: Icon(Icons.share), onPressed: () {}),
+      ));
+    }
+
+    widgets.add(Divider(
+      height: 0.0,
+    ));
+    return widgets;
   }
 }
